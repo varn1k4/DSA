@@ -1,0 +1,73 @@
+import java.util.*;
+
+class Dijkstra {
+
+    static class Edge {
+        int node;
+        int weight;
+
+        Edge(int n, int w) {
+            node = n;
+            weight = w;
+        }
+    }
+
+    public static void main(String args[]) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of locations: ");
+        int V = sc.nextInt();
+
+        ArrayList<Edge>[] graph = new ArrayList[V];
+
+        for(int i=0;i<V;i++)
+            graph[i] = new ArrayList<>();
+
+        System.out.print("Enter number of roads: ");
+        int E = sc.nextInt();
+
+        for(int i=0;i<E;i++) {
+            int u=sc.nextInt();
+            int v=sc.nextInt();
+            int w=sc.nextInt();
+
+            graph[u].add(new Edge(v,w));
+            graph[v].add(new Edge(u,w));
+        }
+
+        System.out.print("Enter starting location: ");
+        int src=sc.nextInt();
+
+        int dist[]=new int[V];
+
+        Arrays.fill(dist,Integer.MAX_VALUE);
+        dist[src]=0;
+
+        PriorityQueue<Edge> pq =
+        new PriorityQueue<>((a,b)->a.weight-b.weight);
+
+        pq.add(new Edge(src,0));
+
+        while(!pq.isEmpty()) {
+
+            Edge current=pq.poll();
+
+            for(Edge e:graph[current.node]) {
+
+                if(dist[current.node]+e.weight < dist[e.node]) {
+
+                    dist[e.node]=
+                    dist[current.node]+e.weight;
+
+                    pq.add(new Edge(e.node,dist[e.node]));
+                }
+            }
+        }
+
+        System.out.println("Shortest distances:");
+
+        for(int i=0;i<V;i++)
+            System.out.println("Location "+i+" : "+dist[i]);
+    }
+}
